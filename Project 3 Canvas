@@ -218,7 +218,7 @@
 			context.translate(250, 150);
 			context.rotate(0.01*n++);
 			context.textBaseline = 'center';
-			context.fillText('Congradulations', 0, 0);
+			context.fillText('CONGRATULATIONS', 0, 0);
 			context.restore();
 			  
 			for(i = 0; i < 3; i++) {
