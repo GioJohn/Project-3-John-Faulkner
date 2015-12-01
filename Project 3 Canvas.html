@@ -14,7 +14,7 @@
 	var particles;
 	var timer;
 	var timerRestart;
-	var colors = ["red", "olive", "cyan", "brown", "magenta"];
+	var colors = ["red", "olive", "cyan", "brown", "magenta", "pink"];
 	
 	function makeParticles() {
 		//create an array of particles for our animation
@@ -35,7 +35,7 @@
 		//the constructor for a single particle, with random starting x+y, velocity, color, and radius
 		//this.x = Math.random()*canvas.width;
 		//this.y = Math.random()*canvas.height;
-		this.type = Math.floor(Math.random()*5);
+		this.type = Math.floor(Math.random()*7);
 		if(this.type == 0) //circles
 		{	
 		this.x = canvas.width/2;
@@ -90,23 +90,49 @@
 		this.size = 20;
 		this.shape = 4;
 		}
+		else if(this.type == 5) //half-moon
+		{
+		this.x = canvas.width/2;
+		this.y = canvas.height/2;
+		this.vx = Math.random()*10-4;
+		this.vy = Math.random()*10-4;
+		var colors = ["pink"];
+		this.color = colors[Math.floor(Math.random()*colors.length)];
+		this.size = 20;
+		this.shape = 5;
+		}
+		else if(this.type == 6) //hooks
+		{
+		this.x = canvas.width/2;
+		this.y = canvas.height/2;
+		this.vx = Math.random()*10-5;
+		this.vy = Math.random()*10-5;
+		var colors = ["yellow"];
+		this.color = colors[Math.floor(Math.random()*colors.length)];
+		this.size = 20;
+		this.shape = 6;
+		}
+		
 	}
 	
 	function drawParticle(particle)
 	{
-		if(particle.shape == 0){
+		if(particle.shape == 0){ 
+			//circles
 			context.beginPath();
 			context.arc(particle.x, particle.y, particle.radius, 0, degreesToRadians(360), true);
-			context.fillStyle = particle.color;
-			context.fill();
-		}else if(particle.shape == 1){
+			context.strokeStyle = particle.color;
+			context.stroke();
+		}else if(particle.shape == 1){ 
+			//triangles
 			context.beginPath();
 			context.moveTo(particle.x + 60, 45);
 			context.lineTo(particle.x + 80, 45);
 			context.lineTo(particle.x + 70, 10);
 			context.fillStyle = particle.color;
 			context.fill();
-		}else if(particle.shape == 2){
+		}else if(particle.shape == 2){ 
+			//squares
 			context.rect(particle.x, particle.y, particle.size, particle.size);
 			context.fillStyle = particle.color;
 			context.fill();
@@ -123,7 +149,8 @@
 				x += dx;
 				y += dy;
 			}
-		}else if(particle.shape == 3){
+		}else if(particle.shape == 3){ 
+			//hexagons
 			var numberOfSides = 6;
 			context.beginPath();
 			context.moveTo (particle.x +  particle.size * Math.cos(0), particle.y +  particle.size *  Math.sin(0));          
@@ -131,11 +158,12 @@
 				context.lineTo (particle.x + particle.size * Math.cos(i * 2 * Math.PI / numberOfSides), 
 				particle.y + particle.size * Math.sin(i * 2 * Math.PI / numberOfSides));
 			}
-			context.fillStyle = particle.color;
-			context.fill();
+			context.strokeStyle = particle.color;
+			context.stroke();
 			context.lineWidth = 1;
 			context.stroke();
-		}else if(particle.shape == 4){
+		}else if(particle.shape == 4){ 
+			//stars
 			size = particle.size;
 			context.moveTo(5, particle.y + 5);
 			context.lineTo(12, particle.y + 15);
@@ -150,6 +178,27 @@
 			context.lineTo(38, particle.y + 18);
 			context.closePath();
 			context.stroke();
+			context.fillStyle = particle.color;
+			context.fill();
+		}else if(particle.shape == 5){
+			//half-moon
+			context.beginPath();
+			context.arc(particle.x, particle.y + 54, 40, 7, 5, false);
+			context.quadraticCurveTo(particle.x - 5, particle.y + 20, particle.x, particle.y);
+			context.fillStyle = particle.color;
+			context.fill();
+		}else if(particle.shape == 6){
+			//hooks
+			context.beginPath();
+			context.moveTo(particle.x, particle.y);
+			context.bezierCurveTo(particle.x - 30, particle.y + 15, particle.x - 30, particle.y + 55, particle.x + 55, particle.y + 55);
+			context.bezierCurveTo(particle.x + 60, particle.y + 85, particle.x + 15, particle.y + 90, particle.x + 14, particle.y + 60);
+			context.bezierCurveTo(particle.x + 22, particle.y + 60, particle.x + 21, particle.y + 35, particle.x + 19, particle.y + 15);
+			context.bezierCurveTo(particle.x + 24, particle.y - 35, particle.x + 18, particle.y + 45, particle.x + 15, particle.y - 30);
+			context.bezierCurveTo(particle.x + 13, particle.y - 70, particle.x + 77, particle.y = 50, particle.x + 60, particle.y - 30);
+			context.bezierCurveTo(particle.x + 25, particle.y - 65, particle.x - 20, particle.y - 45, particle.x, particle.y);
+			context.closePath();
+			context.lineWidth = 5;
 			context.fillStyle = particle.color;
 			context.fill();
 		}
@@ -194,7 +243,7 @@
 	}
 	
 	function fillBackgroundColor() {
-		context.fillStyle = 'white';
+		context.fillStyle = 'black';
 		context.fillRect(0, 0, canvas.width, canvas.height);
 	}
 	
@@ -215,7 +264,7 @@
 			  
 			// Rotating text
 			context.save();
-			context.translate(250, 150);
+			context.translate(250, 250);
 			context.rotate(0.01*n++);
 			context.textBaseline = 'center';
 			context.fillText('CONGRATULATIONS', 0, 0);
@@ -230,12 +279,12 @@
 				draw();
 				
 		makeParticles();
-		timer = setInterval(moveParticles, 50);
-		timerRestart = setInterval(makeParticles, 4000);
+		timer = setInterval(moveParticles, 35);
+		timerRestart = setInterval(makeParticles, 3500);
 	}
 	</script>
 	</head>
 	<body>
-		<canvas id="canvas" width="500" height="400"></canvas>
+		<canvas id="canvas" width="500" height="500"></canvas>
 	</body>
 </html>
